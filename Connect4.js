@@ -8,7 +8,8 @@ class Connect4 {
         [0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0],
       ],
-      turn: 1
+      turn: 1,
+      fuckingwow: 'unfuckingbelieveable'
     }
 
     for(let i = 0; i < 7; i++) {
