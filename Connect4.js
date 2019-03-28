@@ -12,6 +12,22 @@ class Connect4 {
       fuckingwow: 'unfuckingbelieveable'
     }
 
+    this.matches = [];
+
+    const temp = [];
+    temp.length = 7;
+    temp.fill('0');
+    const empty = temp.join('');
+
+    for(let i = 0; i < Math.pow(2, 7); i++) {
+      const bin = (i >>> 0).toString(2);
+      const binary = (empty + bin).substring(bin.length);
+      this.matches.push(binary);
+    }
+    this.matches.reverse();
+
+    console.log(this.matches);
+
     for(let i = 0; i < 7; i++) {
       const button = document.getElementById(`button${i}`);
       button.addEventListener('click', () => {
@@ -46,12 +62,15 @@ class Connect4 {
   }
 
   agentTurn() {
+    const { gameBoard } = this.state;
+    const depthLimit = 5;
     const newNode = (board, cutoff) => {
       const node = {
-        board,
+        board: [ ...board],
         cutoff,
         applyAction: (action) => {
-
+          const newBoard = this.insertPiece(board, action, 2);
+          return newNode(newBoard, cutoff - 1);
         }
       }
 
@@ -63,14 +82,69 @@ class Connect4 {
       return node;
     }
 
-    new Promise((res, rej) => {
+    const evaluate = (board) => {
+      return Math.floor(Math.random() * 100);
+    }
+
+    const minVal = (node, curAlpha, curBeta) => {
+      if (node.cutoff == 0) { // add check for win
+        return evaluate(node.board);
+      }
+
+      node.actions.forEach((action) => {
+        curBeta = Math.min(curBeta, maxVal(node.applyAction(action), curAlpha, curBeta));
+        if (curAlpha >= curBeta) {
+          return curBeta;
+        }
+      });
+      return curBeta;
+    }
+
+    const maxVal = (node, curAlpha, curBeta) => {
+      if (node.cutoff == 0) { // add check for win
+        return evaluate(node.board);
+      }
+      
+      node.actions.forEach((action) => {
+        curBeta = Math.max(curAlpha, minVal(node.applyAction(action), curAlpha, curBeta));
+        if (curAlpha >= curBeta) {
+          return curBeta;
+        }
+      });
+      return curBeta;
+    }
+
+    const nextMove = () => {
+      let alpha = Number.MIN_SAFE_INTEGER;
+      let alphaPrime = alpha;
+      let beta = Number.MAX_SAFE_INTEGER;
+      let nextAction = -1
+
+      const firstNode = newNode(gameBoard, depthLimit);
+      firstNode.actions.forEach((action) => {
+        alphaPrime = minVal(firstNode.applyAction(action), alpha, beta);
+        if (alphaPrime > alpha) {
+          alpha = alphaPrime;
+          nextAction = action;
+        }
+      });
+
+      return nextAction;
+    }
+
+    console.log(nextMove());
+
+    const prom = new Promise((res, rej) => {
       let column = Math.floor(Math.random() * 7);
       while(!this.placeIntoColumn(column, 2)) {
         column = Math.floor(Math.random() * 7);
       }
-      this.setState({ turn: 1});
       res();
     });
+    prom.then(() => {
+      this.setState({ turn: 1});
+    });
+    console.log('hello');
   }
 
   insertPiece(gameBoard, col, num) {
@@ -87,7 +161,6 @@ class Connect4 {
 
   placeIntoColumn(col, num) {
     const { gameBoard } = this.state;
-    console.log(col, gameBoard[0][col]);
     if (gameBoard[0][col] != 0) return false;
     const newGameBoard = this.insertPiece(gameBoard, col, num);
     this.setState({
