@@ -34,6 +34,7 @@ class Connect4 {
         if (this.state.turn === 1) {
           if(this.placeIntoColumn(i, 1)) {
             if(!this.boardFull()) {
+              this.getColRowDiag(this.state.gameBoard);
               this.setState({ turn: 2});
               this.agentTurn();
             } else {
@@ -44,6 +45,35 @@ class Connect4 {
       });
     }
     this.render();
+  }
+
+  getColRowDiag(board) {
+    const height = board.length;
+    const width = board[0].length;
+
+    const lines = [ ...board ];
+    for(let i = 0; i < width; i++) {
+      const temp = [];
+      for(let j = 0; j < height; j++) {
+        temp.push(board[j][i]);
+      }
+      lines.push(temp);
+    }
+
+    start = 6;
+    left = true;
+    for(let i = 0; i < 11; i++) {
+      const temp = [];
+      for(let j = start; j < width; j++) {
+        temp.push(gameBoard[])
+      }
+    }
+
+    console.log(lines);
+  }
+
+  winCheck(num) {
+
   }
 
   boardFull() {
