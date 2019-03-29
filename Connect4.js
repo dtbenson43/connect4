@@ -65,7 +65,7 @@ class Connect4 {
     for(let i = 0; i < 11; i++) {
       const temp = [];
       for(let j = start; j < width; j++) {
-        temp.push(gameBoard[])
+        temp.push(gameBoard)
       }
     }
 
