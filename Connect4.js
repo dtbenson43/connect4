@@ -19,7 +19,7 @@ class Connect4 {
     const empty = temp.join('');
 
     for(let i = 1; i < Math.pow(2, 4); i++) {
-      const bin = (i >>> 0).toString(2);
+      const bin = (i >>> 0).toString(2); 
       const binary = (empty + bin).substring(bin.length);
       this.matches.push(binary);
     }
