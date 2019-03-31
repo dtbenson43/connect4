@@ -36,9 +36,11 @@ class Connect4 {
                 this.agentTurn();
               } else {
                 console.log('draw game');
+                alert('draw game');
               }
             } else {
               console.log('you win');
+              alert('you win');
             }
           }
         }
@@ -94,7 +96,7 @@ class Connect4 {
     temp.length = 4;
     temp = temp.fill(`${num}`).join('');
     return this.getLines(board).map(line => line.join('')).filter(line => line.includes(temp)).length;
-    }
+  }
 
   boardFull() {
     const { gameBoard } = this.state;
@@ -234,9 +236,11 @@ class Connect4 {
         this.setState({ turn: 1});
       } else {
         console.log('draw game');
+        alert('draw game');
       }
     } else {
       console.log('you lose');
+      alert('you lose');
     }
   }
 
